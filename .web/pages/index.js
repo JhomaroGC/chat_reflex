@@ -8,7 +8,7 @@ import NextHead from "next/head"
 
 
 export default function Component() {
-  const default_state = useContext(StateContext)
+  const state = useContext(StateContext)
   const router = useRouter()
   const { colorMode, toggleColorMode } = useColorMode()
   const focusRef = useRef();
@@ -25,7 +25,7 @@ export default function Component() {
 
   // Route after the initial page hydration.
   useEffect(() => {
-    const change_complete = () => Event([E('default_state.hydrate', {})])
+    const change_complete = () => Event([E('state.hydrate', {})])
     router.events.on('routeChangeComplete', change_complete)
     return () => {
       router.events.off('routeChangeComplete', change_complete)
@@ -37,26 +37,24 @@ export default function Component() {
   <Fragment><Fragment>
   <Container>
   <Box>
-  <Box sx={{"marginY": "1rem"}}>
+  {state.chat_history.map((axbigsjs, i) => (
+  <Box key={i} sx={{"marginY": "1em"}}>
   <Box sx={{"textAlign": "right"}}>
-  {`What is Reflex?`}
+  <Text sx={{"padding": "1em", "borderRadius": "5px", "marginY": "0.5em", "boxShadow": "rgba(0, 0, 0, 0.15) 0px 2px 8px", "maxWidth": "30em", "display": "inline-block", "bg": "#F5EFFE", "marginLeft": "20%"}}>
+  {axbigsjs.at(0)}
+</Text>
 </Box>
   <Box sx={{"textAlign": "left"}}>
-  {`A way to build web apps in pure Python`}
+  <Text sx={{"padding": "1em", "borderRadius": "5px", "marginY": "0.5em", "boxShadow": "rgba(0, 0, 0, 0.15) 0px 2px 8px", "maxWidth": "30em", "display": "inline-block", "bg": "#DEEAFD", "marginRight": "20%"}}>
+  {axbigsjs.at(1)}
+</Text>
 </Box>
 </Box>
-  <Box sx={{"marginY": "1rem"}}>
-  <Box sx={{"textAlign": "right"}}>
-  {`What i can make with it`}
-</Box>
-  <Box sx={{"textAlign": "left"}}>
-  {`Anything from a simple website to a complex web app!`}
-</Box>
-</Box>
+))}
 </Box>
   <HStack>
-  <Input placeholder={`Ask a question`} type={`text`}/>
-  <Button>
+  <Input onBlur={_e => Event([E("state.set_question", {value:_e.target.value})], _e)} placeholder={`Ask a question`} sx={{"borderWidth": "1px", "padding": "1em", "boxShadow": "rgba(0, 0, 0, 0.15) 0px 2px 8px"}} type={`text`}/>
+  <Button onClick={_e => Event([E("state.answer", {})], _e)} sx={{"bg": "#CEFFEE", "boxShadow": "rgba(0, 0, 0, 0.15) 0px 2px 8px"}}>
   {`Ask`}
 </Button>
 </HStack>
